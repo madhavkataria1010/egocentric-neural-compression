@@ -1,0 +1,41 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+.venv/
+venv/
+.env
+
+# Data (root-level only — don't match src/ego_codec/data)
+/data/
+*.vrs
+*.mp4
+*.zarr/
+*.h5
+*.pt
+*.ckpt
+checkpoints/
+/runs/
+wandb/
+lightning_logs/
+
+# User-signed Aria URL list — time-limited, personal, must never be committed
+AriaEverydayActivities_download_urls.json
+*_download_urls.json
+train*.log
+preprocess.log
+
+# Claude Code session
+.claude/
+.pytest_cache/
+
+# Editor / OS
+.idea/
+.vscode/
+.DS_Store
+
+# Notebook outputs
+*.ipynb_checkpoints/
