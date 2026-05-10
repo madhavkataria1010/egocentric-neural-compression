@@ -93,22 +93,29 @@ Existing learned codecs (DVC, FVC, the entire DCVC family up through DCVC-RT 202
 
 ## Method
 
+```mermaid
+flowchart LR
+    IMU([IMU window<br/><sub>T × 6</sub>]):::sensor --> WP[IMUWarpPredictor<br/><sub>~80k params</sub>]:::ours
+    WP -- flow --> WARP(((warp)))
+    PREV([x_prev_hat]):::data --> WARP
+    WARP --> PRED([x_pred]):::data
+    CURR([x_curr]):::data --> SUB(((−)))
+    PRED --> SUB
+    SUB --> RES([residual]):::data
+    RES --> HP[MeanScaleHyperprior<br/><sub>residual codec</sub>]:::codec
+    HP -. bitstream .-> R([r̂]):::data
+    R --> ADD(((+)))
+    PRED --> ADD
+    ADD --> OUT([x̂]):::output
+
+    classDef sensor  fill:#6E2594,color:#fff,stroke:#6E2594
+    classDef ours    fill:#E87B00,color:#fff,stroke:#E87B00
+    classDef codec   fill:#2C7FB8,color:#fff,stroke:#2C7FB8
+    classDef data    fill:#1f1f1f,color:#fff,stroke:#888
+    classDef output  fill:#2CA02C,color:#fff,stroke:#2CA02C
 ```
-                    ┌────────────────────┐
-   IMU window ─────▶│  IMUWarpPredictor  │── flow ─┐        ~80k params
-   (T × 6)          └────────────────────┘         │        learned generalization of
-                                                   ▼        Karpenko 2011 gyro→homography
-   x_prev_hat ──────────────────── warp(·, flow) ─▶ x_pred
-                                                   │
-   x_curr ──────────────────────────── (− x_pred) ─▶ residual
-                                                   ▼
-                                       MeanScaleHyperprior  ── bitstream
-                                                   │
-                                                   ▼
-                                                  r_hat ── (+) ──▶ x_hat
-                                                                       ▲
-                                                              x_pred ──┘
-```
+
+The orange block is the only addition vs a vanilla learned P-frame codec; everything else is a Mean-Scale Hyperprior wired to code residuals against the IMU-warped prediction.
 
 | Module | File | Role |
 |---|---|---|
