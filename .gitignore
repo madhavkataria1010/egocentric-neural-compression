@@ -32,6 +32,9 @@ preprocess.log
 .claude/
 .pytest_cache/
 
+# Personal correspondence drafts — not for the public repo
+email_draft.md
+
 # Editor / OS
 .idea/
 .vscode/
